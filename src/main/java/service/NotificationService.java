@@ -44,12 +44,19 @@ public class NotificationService {
     }
 
     @Transactional
-    public Uni<Integer> deleteNotifications(Long id){
+    public Uni<Boolean> deleteNotification(Long id){
+        return notificationRepository.deleteById(id);
+    }
 
+    /*
+    @Transactional
+    public Uni<Integer> deleteNotifications(Long id){
         return client.preparedQuery("DELETE FROM notification WHERE id = ?")
                 .execute(Tuple.of(id))
                 .onItem().transform(SqlResult::rowCount);
     }
+
+     */
 
     public Uni<NotificationEntity> getNotification(Long id){
         return notificationRepository.findById(id);

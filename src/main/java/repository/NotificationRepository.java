@@ -1,16 +1,26 @@
 package repository;
 
-import io.quarkus.hibernate.reactive.panache.PanacheRepository;
+import commons.repository.SoftDeleteRepository;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import repository.model.NotificationEntity;
 
+import java.util.List;
 
 @ApplicationScoped
-public class NotificationRepository implements PanacheRepository<NotificationEntity> {
+public class NotificationRepository implements SoftDeleteRepository<NotificationEntity> {
     @Override
-    public Uni<Void> delete(NotificationEntity notificationEntity) {
-        //Implementar con el update en la bdd
-        return PanacheRepository.super.delete(notificationEntity);
+    public Uni<Void> delete(NotificationEntity entity) {
+        return SoftDeleteRepository.super.delete(entity);
+    }
+
+    @Override
+    public Uni<Boolean> deleteById(Long id) {
+        return SoftDeleteRepository.super.deleteById(id);
+    }
+
+    @Override
+    public Uni<List<NotificationEntity>> findAllNotDeleted() {
+        return SoftDeleteRepository.super.findAllNotDeleted();
     }
 }

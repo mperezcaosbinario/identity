@@ -43,6 +43,22 @@ public class NotificationController {
                 .onFailure().invoke(throwable -> logger.error("Failed deleting notification: " + throwable.getMessage()));
     }
 
+    @DELETE
+    @Path("/notification-by-id")
+    @WithSession
+    @Produces(MediaType.APPLICATION_JSON)
+    public Uni<Response> deleteNotificationById(
+            @QueryParam("id") Long id
+    ) {
+        logger.info("Deleting notification...");
+        return notificationService.deleteNotification(id)
+                .map(notification -> {
+                    logger.info("valor: " + notification);
+                    return Response.ok(notification).build();
+                })
+                .onFailure().invoke(throwable -> logger.error("Failed deleting notification: " + throwable.getMessage()));
+    }
+
     @GET
     @WithSession
     @Produces(MediaType.APPLICATION_JSON)
