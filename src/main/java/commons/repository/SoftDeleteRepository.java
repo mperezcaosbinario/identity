@@ -33,7 +33,46 @@ public interface SoftDeleteRepository<T extends SoftDeleteEntity> extends Panach
                 }).map(x -> true);
     }
 
+    default Uni<Long> deleteByQuery(String query, Object... params) {
+        return list(query + " and deletedAt is null", params)
+                .flatMap(entities -> {
+                    long countDeleted = 0;
+                    Uni<Void> result = Uni.createFrom().voidItem();
+                    for (T entity : entities) {
+                        if (!entity.isDeleted()) {
+                            entity.softDelete();
+                            result = result.chain(ignore -> persistAndFlush(entity).replaceWithVoid());
+                            countDeleted++;
+                        }
+                    }
+                    return result.replaceWith(countDeleted);
+                });
+    }
+
     default Uni<List<T>> findAllNotDeleted() {
         return list("deletedAt is null");
     }
+
+    default Uni<T> findById(Long id) {
+        return find("id = ?1 and deletedAt is null", id).firstResult();
+    }
+
+    default Uni<List<T>> findNotDeleted(String query, Object... params) {
+        String newQuery = query + " and deletedAt is null";
+        return list(newQuery, params);
+    }
+
+    default Uni<T> findOneNotDeleted(String query, Object... params) {
+        String newQuery = query + " and deletedAt is null";
+        return find(newQuery, params).firstResult();
+    }
+
+    default Uni<List<T>> findByFieldNotDeleted(String fieldName, Object value) {
+        return list(fieldName + " = ?1 and deletedAt is null", value);
+    }
+
+    default Uni<T> findByFieldSingleResultNotDeleted(String fieldName, Object value) {
+        return find(fieldName + " = ?1 and deletedAt is null", value).firstResult();
+    }
+
 }

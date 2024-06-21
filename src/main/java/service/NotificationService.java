@@ -40,7 +40,7 @@ public class NotificationService {
 
     @Transactional
     public Uni<Long> deleteNotification(String sender, String receiver){
-        return notificationRepository.delete("sender = ?1 and receiver = ?2", sender, receiver);
+        return notificationRepository.deleteByQuery("sender = ?1 and receiver = ?2", sender, receiver);
     }
 
     @Transactional

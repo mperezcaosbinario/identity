@@ -15,6 +15,9 @@ public class NotificationRepository implements SoftDeleteRepository<Notification
     }
 
     @Override
+    public Uni<Long> deleteByQuery(String query, Object... params){ return SoftDeleteRepository.super.deleteByQuery(query, params);}
+
+    @Override
     public Uni<Boolean> deleteById(Long id) {
         return SoftDeleteRepository.super.deleteById(id);
     }
@@ -23,4 +26,8 @@ public class NotificationRepository implements SoftDeleteRepository<Notification
     public Uni<List<NotificationEntity>> findAllNotDeleted() {
         return SoftDeleteRepository.super.findAllNotDeleted();
     }
+
+    @Override
+    public Uni<NotificationEntity> findById(Long id){ return SoftDeleteRepository.super.findById(id); }
+
 }
