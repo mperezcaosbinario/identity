@@ -14,11 +14,14 @@ import repository.model.NotificationEntity;
 
 @ApplicationScoped
 public class NotificationService {
-    @Inject
-    private NotificationRepository notificationRepository;
+    private final NotificationRepository notificationRepository;
+    private final MySQLPool client;
 
     @Inject
-    MySQLPool client;
+    public NotificationService(NotificationRepository notificationRepository, MySQLPool client) {
+        this.notificationRepository = notificationRepository;
+        this.client = client;
+    }
 
     private static final Logger logger = Logger.getLogger(NotificationService.class);
 

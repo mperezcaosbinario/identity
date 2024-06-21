@@ -16,8 +16,12 @@ public class NotificationController {
 
     private static final Logger logger = Logger.getLogger(NotificationController.class);
 
+    private final NotificationService notificationService;
+
     @Inject
-    private NotificationService notificationService;
+    public NotificationController(NotificationService notificationService) {
+        this.notificationService = notificationService;
+    }
 
     @POST
     @WithSession
